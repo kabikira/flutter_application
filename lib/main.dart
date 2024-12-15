@@ -10,12 +10,31 @@ void main() {
     },
   );
 
+  const formKey = GlobalObjectKey<FormState>('FORM_KEY');
+
   final form = Form(
+    key: formKey,
     autovalidateMode: AutovalidateMode.always,
     child: textFormField,
   );
 
-  final body = form;
+  final button = ElevatedButton(
+    onPressed: () {
+      if (formKey.currentState!.validate()) {
+        print("バリデート通過時の処理");
+      } else {
+        print("バリデートエラー時の処理");
+      }
+    },
+    child: const Text('ボタン'),
+  );
+
+  final body = Column(
+    children: [
+      form,
+      button,
+    ],
+  );
 
   final sc = Scaffold(
     body: body,

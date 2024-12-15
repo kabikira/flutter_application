@@ -29,24 +29,32 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  Future<String> _dataFetch() async {
-    await Future.delayed(const Duration(seconds: 1));
-    return "データ";
+  Stream<List<String>> _myWatchEntries() async* {
+    final List<String> datas = [];
+    for (int i = 1; i <= 10; i++) {
+      datas.add("データ:$i");
+      await Future.delayed(const Duration(seconds: 1));
+      yield datas;
+    }
   }
 
   @override
   Widget build(BuildContext context) {
-    final text = FutureBuilder(
-        future: _dataFetch(),
-        builder: (BuildContext context, AsyncSnapshot<String> snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return const CircularProgressIndicator();
-          }
+    final list = StreamBuilder(
+      stream: _myWatchEntries(),
+      builder: (BuildContext context, AsyncSnapshot<List<String>> snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return const CircularProgressIndicator();
+        }
 
-          final data = snapshot.data ?? "";
+        final List<String> datas = snapshot.data ?? [];
 
-          return Text(data);
-        });
-    return Scaffold(body: text);
+        return ListView.builder(
+          itemCount: datas.length,
+          itemBuilder: (c, i) => Text(datas[i]),
+        );
+      },
+    );
+    return Scaffold(body: list);
   }
 }

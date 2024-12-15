@@ -1,45 +1,22 @@
 import 'package:flutter/material.dart';
 
+Future<String> dataFetch() async {
+  await Future.delayed(const Duration(seconds: 1));
+  return "データ";
+}
+
 void main() {
-  final textFormField = TextFormField(
-    validator: (value) {
-      if (value!.isEmpty) {
-        return '入力されていません';
-      }
-      return null;
-    },
-  );
-
-  const formKey = GlobalObjectKey<FormState>('FORM_KEY');
-
-  final form = Form(
-    key: formKey,
-    autovalidateMode: AutovalidateMode.always,
-    child: textFormField,
-  );
-
   final button = ElevatedButton(
-    onPressed: () {
-      if (formKey.currentState!.validate()) {
-        print("バリデート通過時の処理");
-      } else {
-        print("バリデートエラー時の処理");
-      }
+    onPressed: () async {
+      final data = await dataFetch();
+      print(data);
     },
-    child: const Text('ボタン'),
-  );
-
-  final body = Column(
-    children: [
-      form,
-      button,
-    ],
+    child: const Text("ボタン"),
   );
 
   final sc = Scaffold(
-    body: body,
+    body: button,
   );
-
   final app = MaterialApp(home: sc);
   runApp(app);
 }

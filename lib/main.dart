@@ -2,24 +2,28 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 void main() {
-  const text = Text('テキスト');
-
-  final textFocus = Focus(
+  final controller = TextEditingController();
+  final addTextField = TextField(
     autofocus: true,
+    controller: controller,
+  );
+
+  final addTextFieldFocus = Focus(
+    autofocus: false,
     onKeyEvent: (node, event) {
       final key = event.logicalKey;
       if (event is KeyDownEvent) {
         if (key == LogicalKeyboardKey.enter) {
-          print('Enterキーが押されました');
+          print(controller.text);
           return KeyEventResult.handled;
         }
       }
       return KeyEventResult.ignored;
     },
-    child: text,
+    child: addTextField,
   );
 
-  final sc = Scaffold(body: textFocus);
+  final sc = Scaffold(body: addTextFieldFocus);
   final app = MaterialApp(home: sc);
   runApp(app);
 }

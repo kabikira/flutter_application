@@ -1,29 +1,34 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
+import 'package:flutter/services.dart'; // これを追加
+
+Future<KeyEventResult> manageKeyboard(KeyEvent event) async {
+  final key = event.logicalKey;
+  if (event is KeyDownEvent) {
+    if (key == LogicalKeyboardKey.enter) {
+      // Enterキー押下時
+      await Future.delayed(Duration(seconds: 10));
+      print('10秒後に実行');
+      return KeyEventResult.handled;
+    }
+  }
+  return KeyEventResult.ignored;
+}
 
 void main() {
-  final controller = TextEditingController();
-  final addTextField = TextField(
-    autofocus: true,
-    controller: controller,
-  );
+  final text = Text('テキスト');
 
-  final addTextFieldFocus = Focus(
-    autofocus: false,
+  final textFocus = Focus(
+    autofocus: true,
     onKeyEvent: (node, event) {
-      final key = event.logicalKey;
-      if (event is KeyDownEvent) {
-        if (key == LogicalKeyboardKey.enter) {
-          print(controller.text);
-          return KeyEventResult.handled;
-        }
-      }
+      // onKeyEventはasyncに対応してません。
+      manageKeyboard(event); // 別途、非同期用の関数を定義し、呼び出します。
       return KeyEventResult.ignored;
     },
-    child: addTextField,
+    child: text,
   );
-
-  final sc = Scaffold(body: addTextFieldFocus);
+  final sc = Scaffold(
+    body: textFocus,
+  );
   final app = MaterialApp(home: sc);
   runApp(app);
 }

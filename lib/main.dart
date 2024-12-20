@@ -1,34 +1,40 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart'; // これを追加
 
-Future<KeyEventResult> manageKeyboard(KeyEvent event) async {
-  final key = event.logicalKey;
-  if (event is KeyDownEvent) {
-    if (key == LogicalKeyboardKey.enter) {
-      // Enterキー押下時
-      await Future.delayed(Duration(seconds: 10));
-      print('10秒後に実行');
-      return KeyEventResult.handled;
-    }
-  }
-  return KeyEventResult.ignored;
+class TestIntent extends Intent {} // インテントクラス
+
+void test() {
+  // インテント時の処理関数
+  print('「Control + N」が押されました');
 }
 
 void main() {
-  final text = Text('テキスト');
+  // LogicalKeySetオブジェクトを作成（「Control + N」の例）
+  final lksControlN =
+      LogicalKeySet(LogicalKeyboardKey.control, LogicalKeyboardKey.keyN);
 
-  final textFocus = Focus(
-    autofocus: true,
-    onKeyEvent: (node, event) {
-      // onKeyEventはasyncに対応してません。
-      manageKeyboard(event); // 別途、非同期用の関数を定義し、呼び出します。
-      return KeyEventResult.ignored;
+  final text = Text('テキスト');
+  final body = text; // ボディー
+  final faDetector = FocusableActionDetector(
+    // 1
+    autofocus: true, // 2
+    shortcuts: <ShortcutActivator, Intent>{
+      // 3
+      lksControlN: TestIntent(),
     },
-    child: text,
+    actions: {
+      // 4
+      TestIntent: CallbackAction<TestIntent>(
+        onInvoke: (intent) => test(),
+      ),
+    },
+    child: body, // 5
   );
+
   final sc = Scaffold(
-    body: textFocus,
+    body: faDetector, // 6
   );
+
   final app = MaterialApp(home: sc);
   runApp(app);
 }

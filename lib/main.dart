@@ -3,9 +3,10 @@ import 'package:flutter/services.dart'; // これを追加
 
 class TestIntent extends Intent {} // インテントクラス
 
-void test() {
+void test() async {
+  await Future.delayed(const Duration(seconds: 10));
   // インテント時の処理関数
-  print('「Control + N」が押されました');
+  print('「Control + N」が押された10秒後に実行');
 }
 
 void main() {

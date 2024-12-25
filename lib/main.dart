@@ -1,14 +1,21 @@
 import 'package:flutter/material.dart';
+import 'env.dart';
 
 void main() {
-  const body = SafeArea(
-    child: Text("テキスト"),
-  );
+  runApp(MyApp());
+}
 
-  const sc = Scaffold(
-    body: body,
-  );
+class MyApp extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    final apiKey = Env.apiKey;
 
-  const app = MaterialApp(home: sc);
-  runApp(app);
+    return MaterialApp(
+      home: Scaffold(
+        body: SafeArea(
+          child: Text("APIキー：$apiKey"),
+        ),
+      ),
+    );
+  }
 }

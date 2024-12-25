@@ -1,89 +1,30 @@
 import 'package:flutter/material.dart';
-import 'package:shared_preferences/shared_preferences.dart'; // 1
+import 'package:fluttertoast/fluttertoast.dart';
 
 void main() {
-  runApp(const MyApp());
-}
+  final button1 = ElevatedButton(
+    onPressed: () {
+      Fluttertoast.showToast(msg: "トースト");
+    },
+    child: const Text("トースト"),
+  );
 
-class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+  final button2 = ElevatedButton(
+    onPressed: () {
+      Fluttertoast.showToast(
+        msg: "長いトースト",
+        toastLength: Toast.LENGTH_LONG,
+      );
+    },
+    child: const Text("長いトースト"),
+  );
 
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Flutter Demo',
-      theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
-        useMaterial3: true,
-      ),
-      home: const MyHomePage(title: 'Flutter Demo Home Page'),
-    );
-  }
-}
+  final sc = Scaffold(
+    body: Column(
+      children: [button1, button2],
+    ),
+  );
 
-class MyHomePage extends StatefulWidget {
-  const MyHomePage({super.key, required this.title});
-  final String title;
-
-  @override
-  State<MyHomePage> createState() => _MyHomePageState();
-}
-
-class _MyHomePageState extends State<MyHomePage> {
-  bool _isOn = false;
-
-  _MyHomePageState() {
-    // 8
-    final f = _loadSettingA();
-    f.then((value) => {
-          setState(() {
-            _isOn = value;
-          })
-        });
-  }
-
-  Future<void> _saveSettingA(bool value) async {
-    // 2
-    final prefs = await SharedPreferences.getInstance(); // 3
-
-    await prefs.setBool(
-        // 4
-        'settingA',
-        value);
-  }
-
-  Future<bool> _loadSettingA() async {
-    // 5
-    final prefs = await SharedPreferences.getInstance(); // 6
-    final value = prefs.getBool('settingA');
-    return value ?? false; // 7
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    final switchText = Text(_isOn ? "設定A:オン" : "設定A:オフ");
-    final toggle = Switch(
-      value: _isOn,
-      onChanged: (value) {
-        setState(() {
-          _isOn = value;
-          _saveSettingA(value); // 9
-        });
-      },
-    );
-
-    final body = SafeArea(
-      // ボディー
-      child: Row(
-        children: [
-          switchText,
-          toggle,
-        ],
-      ),
-    );
-
-    return Scaffold(
-      body: body, // ボディー
-    );
-  }
+  final app = MaterialApp(home: sc);
+  runApp(app);
 }

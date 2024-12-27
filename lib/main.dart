@@ -1,21 +1,36 @@
 import 'package:flutter/material.dart';
 
 void main() {
-  const body = SafeArea(
-    child: Row(
-      children: [
-        Text("あいうえおかきくけこさしすせそ"),
-        SizedBox(
-          width: 70,
-          child: Text(
-              maxLines: 1, overflow: TextOverflow.ellipsis, "アイウエロカキくけこさしすせそ"),
-        )
-      ],
-    ),
+  const body = Center(
+    child: Text("テキスト"),
+  );
+  final fab = Row(
+    mainAxisAlignment: MainAxisAlignment.center,
+    children: [
+      FloatingActionButton(
+        onPressed: () {
+          print("ボタンが押されました");
+        },
+        child: const Icon(Icons.add),
+      ),
+      const SizedBox(
+        width: 10,
+      ),
+      FloatingActionButton(
+        onPressed: () {
+          print("ボタンが押されました");
+        },
+        backgroundColor: Colors.amber,
+        child: const Icon(Icons.edit),
+      )
+    ],
   );
 
-  const sc = Scaffold(body: body);
+  final sc = Scaffold(
+    body: body,
+    floatingActionButton: fab,
+  );
 
-  const app = MaterialApp(home: sc);
+  final app = MaterialApp(home: sc);
   runApp(app);
 }

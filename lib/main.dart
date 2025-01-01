@@ -1,122 +1,123 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 
-void main() {
-  runApp(const MyApp());
+main() {
+  final app = MyApp();
+  runApp(app);
 }
 
 class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+  MyApp({super.key});
 
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Flutter Demo',
-      debugShowCheckedModeBanner: false, // デバッグラベルを消す
-      theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
-        useMaterial3: true,
+  final router = GoRouter(
+    initialLocation: '/a',
+    routes: [
+      GoRoute(
+        path: '/a',
+        builder: (context, state) => const ScreenA(),
       ),
-      home: const MyHomePage(title: 'Flutter Demo Home Page'),
-    );
-  }
-}
-
-class MyHomePage extends StatefulWidget {
-  const MyHomePage({super.key, required this.title});
-  final String title;
-
-  @override
-  State<MyHomePage> createState() => _MyHomePageState();
-}
-
-class _MyHomePageState extends State<MyHomePage> {
-  int _selectedIndex = 0;
-  _onTapped(int index) {
-    // 1
-    setState(() {
-      _selectedIndex = index;
-    });
-  }
-
-  final _items = [
-    const BottomNavigationBarItem(
-      // index:0
-      icon: Icon(Icons.home),
-      label: 'ホーム',
-      tooltip: '「ホーム」画面を表示します',
-    ),
-    const BottomNavigationBarItem(
-      // index:1
-      icon: Icon(Icons.help),
-      label: '使い方',
-      tooltip: '「使い方」画面を表示します',
-    ),
-    const BottomNavigationBarItem(
-      // index:2
-      icon: Icon(Icons.settings),
-      label: '設定',
-      tooltip: '「設定」画面を表示します',
-    ),
-  ];
-
-  final _screens = [
-    // 2
-    const HomeScreen(),
-    const HelpScreen(),
-    const SettingsScreen(),
-  ];
+      GoRoute(
+        path: '/b',
+        builder: (context, state) => const ScreenB(),
+      ),
+      GoRoute(
+        path: '/c',
+        builder: (context, state) => const ScreenC(),
+      ),
+    ],
+  );
 
   @override
   Widget build(BuildContext context) {
-    final bnBar = BottomNavigationBar(
-      items: _items,
-      backgroundColor: Colors.grey[800],
-      selectedItemColor: Colors.white,
-      unselectedItemColor: Colors.grey,
-      currentIndex: _selectedIndex,
-      onTap: _onTapped, // 1
+    return MaterialApp.router(
+      routeInformationProvider: router.routeInformationProvider,
+      routeInformationParser: router.routeInformationParser,
+      routerDelegate: router.routerDelegate,
     );
+  }
+}
 
-    final body = Center(child: _screens[_selectedIndex]);
+class ScreenA extends StatelessWidget {
+  const ScreenA({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    final appBar = AppBar(
+      backgroundColor: Colors.lime[50],
+      title: const Text('スクリーンA'),
+    );
 
     return Scaffold(
-      body: body, // ボディー
-      bottomNavigationBar: bnBar, // ボトムナビゲーションバー
+      appBar: appBar,
+      body: Center(
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          children: [
+            ElevatedButton(
+              onPressed: () => context.push('/b'),
+              child: const Text("【Bに進む】context.push('/b')"),
+            ),
+          ],
+        ),
+      ),
     );
   }
 }
 
-class HomeScreen extends StatelessWidget {
-  const HomeScreen({super.key});
+class ScreenB extends StatelessWidget {
+  const ScreenB({super.key});
 
   @override
   Widget build(BuildContext context) {
-    const body = Center(child: Text('ホーム'));
-    return const Scaffold(
-      body: body,
+    final appBar = AppBar(
+      backgroundColor: Colors.yellow[50],
+      title: const Text('スクリーンB'),
+    );
+
+    return Scaffold(
+      appBar: appBar,
+      body: Center(
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          children: [
+            ElevatedButton(
+              onPressed: () => context.pop(),
+              child: const Text("【戻る】context.pop()"),
+            ),
+            ElevatedButton(
+              onPressed: () => context.push('/c'),
+              child: const Text("【Cに進む】context.push('/c')"),
+            ),
+          ],
+        ),
+      ),
     );
   }
 }
 
-class HelpScreen extends StatelessWidget {
-  const HelpScreen({super.key});
+class ScreenC extends StatelessWidget {
+  const ScreenC({super.key});
+
   @override
   Widget build(BuildContext context) {
-    const body = Center(child: Text('使い方'));
-    return const Scaffold(
-      body: body,
+    final appBar = AppBar(
+      backgroundColor: Colors.purple[50],
+      title: const Text('スクリーンC'),
     );
-  }
-}
 
-class SettingsScreen extends StatelessWidget {
-  const SettingsScreen({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    const body = Center(child: Text('設定'));
-    return const Scaffold(
-      body: body,
+    return Scaffold(
+      appBar: appBar,
+      body: Center(
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          children: [
+            ElevatedButton(
+              onPressed: () => context.pop(),
+              child: const Text("【戻る】context.pop()"),
+            ),
+          ],
+        ),
+      ),
     );
   }
 }

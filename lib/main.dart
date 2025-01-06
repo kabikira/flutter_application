@@ -18,8 +18,15 @@ class MyApp extends StatelessWidget {
         builder: (context, state) => const ScreenA(),
       ),
       GoRoute(
-        path: '/b',
-        builder: (context, state) => const ScreenB(),
+        path: '/b/:id/:code',
+        builder: (context, state) {
+          final id = state.pathParameters['id'];
+          final code = state.pathParameters['code'];
+          return ScreenB(
+            id: int.parse(id!),
+            code: code!,
+          );
+        },
       ),
       GoRoute(
         path: '/c',
@@ -55,7 +62,9 @@ class ScreenA extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
             ElevatedButton(
-              onPressed: () => context.push('/b'),
+              // onPressed: () => context.push('/b'),
+              onPressed: () => context.push('/b/100/abcd'),
+              style: ElevatedButton.styleFrom(backgroundColor: Colors.red[50]),
               child: const Text("【Bに進む】context.push('/b')"),
             ),
             ElevatedButton(
@@ -70,10 +79,18 @@ class ScreenA extends StatelessWidget {
 }
 
 class ScreenB extends StatelessWidget {
-  const ScreenB({super.key});
+  const ScreenB({
+    super.key,
+    required this.id,
+    required this.code,
+  });
+
+  final int id;
+  final String code;
 
   @override
   Widget build(BuildContext context) {
+    String idStr = "$id";
     final appBar = AppBar(
       backgroundColor: Colors.yellow[50],
       title: const Text('スクリーンB'),
@@ -85,6 +102,7 @@ class ScreenB extends StatelessWidget {
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
+            Text("id:$idStr, code:$code"),
             ElevatedButton(
               onPressed: () => context.pop(),
               child: const Text("【戻る】context.pop()"),

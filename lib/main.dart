@@ -10,6 +10,7 @@ class MyApp extends StatelessWidget {
   MyApp({super.key});
 
   final router = GoRouter(
+    debugLogDiagnostics: true,
     initialLocation: '/a',
     routes: [
       GoRoute(

@@ -58,6 +58,10 @@ class ScreenA extends StatelessWidget {
               onPressed: () => context.push('/b'),
               child: const Text("【Bに進む】context.push('/b')"),
             ),
+            ElevatedButton(
+              onPressed: () => context.go('/c'),
+              child: const Text("Cを指定して直接行く】context.go('/c')"),
+            ),
           ],
         ),
       ),
